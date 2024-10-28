@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Details</title>
+  <style>
+    /* Basic styling */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Container for the form */
+    .form-container {
+      background-color: #fff;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    /* Header styling */
+    .form-container h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    /* Label styling */
+    .form-container label {
+      display: block;
+      text-align: left;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    /* Input field styling */
+    .form-container input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    /* Button styling */
+    .form-container button {
+      width: 48%;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      border: none;
+      margin-top: 10px;
+    }
+
+    .form-container button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .form-container button[type="reset"] {
+      background-color: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Add Employee Details</h2>
+    <form id="employeeForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" required>
+      <label for="address">Address:</label>
+      <input type="text" id="address" required>
+      <label for="pan">PAN:</label>
+      <input type="text" id="pan" required>
+      <label for="aadhaar">Aadhaar:</label>
+      <input type="text" id="aadhaar" required>
+      <div>
+        <button type="submit">Submit</button>
+        <button type="reset">Cancel</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
+
+  <script src="db.js"></script>
+  <script>
+    document.getElementById("employeeForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const employee = {
+        name: document.getElementById("name").value,
+        address: document.getElementById("address").value,
+        pan: document.getElementById("pan").value,
+        aadhaar: document.getElementById("aadhaar").value
+      };
+      addEmployee(employee);
+      alert("Employee added successfully!");
+      window.location.href = "employee-management.html"; // Redirect to management page
+    });
+  </script>
+</body>
+</html>
