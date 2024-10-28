@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Management</title>
+  <style>
+    /* Basic body styling */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    /* Page title styling */
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    /* Container for employee buttons */
+    .button-container {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    /* Styling for buttons */
+    .button-container button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      border: none;
+    }
+
+    .button-container button:hover {
+      opacity: 0.9;
+    }
+
+    .button-container button:nth-child(1) { background-color: #4CAF50; color: white; } /* Add Employee */
+    .button-container button:nth-child(2) { background-color: #FF9800; color: white; } /* Update Employee */
+    .button-container button:nth-child(3) { background-color: #f44336; color: white; } /* Delete Employee */
+    .button-container button:nth-child(4) { background-color: #2196F3; color: white; } /* Show Employees */
+
+    /* Form containers */
+    .form-container {
+      display: none;
+      background-color: #fff;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    /* Form titles */
+    .form-container h3 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    /* Input fields */
+    .form-container input[type="number"],
+    .form-container input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    /* Form buttons */
+    .form-container button {
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      border: none;
+    }
+
+    /* Submit buttons */
+    .form-container button:nth-child(1) { background-color: #4CAF50; color: white; } /* Submit */
+    .form-container button:nth-child(2) { background-color: #f44336; color: white; } /* Cancel */
+
+    /* Employee list */
+    #employeeList {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Employee Management</h2>
+  <div class="button-container">
+    <button onclick="window.location.href='employee-details.html'">Add Employee</button>
+    <button onclick="showUpdateForm()">Update Employee</button>
+    <button onclick="showDeleteForm()">Delete Employee</button>
+    <button onclick="showEmployees()">Show Employees</button>
+  </div>
+
+  <div id="updateForm" class="form-container">
+    <h3>Update Employee</h3>
+    <input type="number" id="updateId" placeholder="Employee ID" required />
+    <input type="text" id="updateName" placeholder="New Name" />
+    <input type="text" id="updateAddress" placeholder="New Address" />
+    <input type="text" id="updatePan" placeholder="New PAN" />
+    <input type="text" id="updateAadhaar" placeholder="New Aadhaar" />
+    <button onclick="updateEmployee()">Submit Update</button>
+    <button onclick="hideUpdateForm()">Cancel</button>
+  </div>
+
+  <div id="deleteForm" class="form-container">
+    <h3>Delete Employee</h3>
+    <input type="number" id="deleteId" placeholder="Employee ID" required />
+    <button onclick="deleteEmployee()">Submit Delete</button>
+    <button onclick="hideDeleteForm()">Cancel</button>
+  </div>
+
+  <div id="employeeList"></div>
+
+  <script>
+    // JavaScript to show and hide forms
+    function showUpdateForm() {
+      document.getElementById('updateForm').style.display = 'block';
+      document.getElementById('deleteForm').style.display = 'none';
+    }
+
+    function hideUpdateForm() {
+      document.getElementById('updateForm').style.display = 'none';
+    }
+
+    function showDeleteForm() {
+      document.getElementById('deleteForm').style.display = 'block';
+      document.getElementById('updateForm').style.display = 'none';
+    }
+
+    function hideDeleteForm() {
+      document.getElementById('deleteForm').style.display = 'none';
+    }
+
+    // Placeholder functions for update and delete actions
+    function updateEmployee() {
+      alert("Employee updated!");
+    }
+
+    function deleteEmployee() {
+      alert("Employee deleted!");
+    }
+
+    function showEmployees() {
+      alert("Showing employee list.");
+    }
+  </script>
+</body>
+</html>
+
+  <script src="db.js"></script>
+  <script>
+    // Show update form
+    function showUpdateForm() {
+      document.getElementById('updateForm').style.display = 'block';
+      document.getElementById('deleteForm').style.display = 'none'; // Hide delete form if open
+    }
+
+    // Hide update form
+    function hideUpdateForm() {
+      document.getElementById('updateForm').style.display = 'none';
+    }
+
+    // Show delete form
+    function showDeleteForm() {
+      document.getElementById('deleteForm').style.display = 'block';
+      document.getElementById('updateForm').style.display = 'none'; // Hide update form if open
+    }
+
+    // Hide delete form
+    function hideDeleteForm() {
+      document.getElementById('deleteForm').style.display = 'none';
+    }
+
+    // Update Employee Functionality
+    function updateEmployee() {
+      const id = parseInt(document.getElementById('updateId').value);
+      const updatedData = {
+        id: id,
+        name: document.getElementById('updateName').value || undefined,
+        address: document.getElementById('updateAddress').value || undefined,
+        pan: document.getElementById('updatePan').value || undefined,
+        aadhaar: document.getElementById('updateAadhaar').value || undefined
+      };
+
+      const transaction = db.transaction("employees", "readwrite");
+      const store = transaction.objectStore("employees");
+      const request = store.get(id); // Get the employee by ID
+
+      request.onsuccess = (event) => {
+        const employee = event.target.result;
+        if (employee) {
+          // Update the fields with new values if they are provided
+          Object.keys(updatedData).forEach(key => {
+            if (updatedData[key] !== undefined) {
+              employee[key] = updatedData[key];
+            }
+          });
+          store.put(employee); // Save the updated employee back to the database
+          alert("Employee updated successfully!");
+        } else {
+          alert("Employee not found!");
+        }
+      };
+
+      request.onerror = (event) => {
+        console.error("Error updating employee:", event.target.error);
+      };
+
+      hideUpdateForm(); // Hide the form after submission
+      showEmployees(); // Refresh the employee list
+    }
+
+    // Delete Employee Functionality
+    function deleteEmployee() {
+      const id = parseInt(document.getElementById('deleteId').value);
+
+      const transaction = db.transaction("employees", "readwrite");
+      const store = transaction.objectStore("employees");
+      const request = store.delete(id); // Delete employee by ID
+
+      request.onsuccess = () => {
+        alert("Employee deleted successfully!");
+      };
+
+      request.onerror = (event) => {
+        console.error("Error deleting employee:", event.target.error);
+        alert("Error deleting employee. Please check the ID.");
+      };
+
+      hideDeleteForm(); // Hide the form after deletion
+      showEmployees(); // Refresh the employee list
+    }
+
+    // Show Employees Functionality
+    function showEmployees() {
+      const employeeListDiv = document.getElementById("employeeList");
+      employeeListDiv.innerHTML = ""; // Clear existing content
+      
+      const transaction = db.transaction("employees", "readonly");
+      const store = transaction.objectStore("employees");
+      const request = store.getAll(); // Retrieve all employees
+
+      request.onsuccess = (event) => {
+        const employees = event.target.result;
+        if (employees.length > 0) {
+          const list = document.createElement("ul");
+          employees.forEach(employee => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `ID: ${employee.id}, Name: ${employee.name}, Address: ${employee.address}, PAN: ${employee.pan}, Aadhaar: ${employee.aadhaar}`;
+            list.appendChild(listItem);
+          });
+          employeeListDiv.appendChild(list);
+        } else {
+          employeeListDiv.textContent = "No employees found.";
+        }
+      };
+
+      request.onerror = (event) => {
+        console.error("Error fetching employees:", event.target.error);
+        employeeListDiv.textContent = "Error fetching employees.";
+      };
+    }
+  </script>
+</body>
+</html>
